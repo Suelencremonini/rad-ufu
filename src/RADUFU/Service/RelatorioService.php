@@ -8,7 +8,8 @@ use RADUFU\DAO\Factory,
     RADUFU\Service\TipoService,
     RADUFU\Service\CategoriaService;
 require_once(__DIR__.'/../Autoloader.php');
-require('Relatorio/src/FPDI-1.4.3/fpdi.php');
+require_once(__DIR__.'/Relatorio/src/FPDI-1.4.3/fpdi.php');
+#require_once(__DIR__ . '/../../../Relatorio/src/FPDI-1.4.3/fpdi.php');
 
 class RelatorioService extends FPDI{
 	private $prof; #Professor que requisitou o relatorio
