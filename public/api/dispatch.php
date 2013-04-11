@@ -1,5 +1,4 @@
 <?php
-
 require_once (__DIR__ . '/../../src/RADUFU/Autoloader.php');
 use Tonic\Response;
 
@@ -11,11 +10,14 @@ $config = array(
 Mechendo
 */
 
-use RADUFU\Resource\RelatorioResource;
+use RADUFU\Resource\RelatorioResource,
+	RADUFU\Service\RelatorioService;
 
-$x = new RelatorioResource();
-$y = $x->GerarRelatorio(1);
-echo "Ola mundo".$y->getNome();
+#$x = new RelatorioResource();
+$z = new RelatorioService();
+#$y = $x->GerarRelatorio(1);
+$z->GerarRelatorio(1);
+#echo "Ola mundo".$y->getNome();
 
 
 

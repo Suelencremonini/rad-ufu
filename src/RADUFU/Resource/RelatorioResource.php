@@ -42,13 +42,13 @@ public function __construct()
         $this->atividades = $this->atividadeService->getEntreDatas($this->prof->getId(),'2010-10-2','2016-10-2');
         
 
-
+/*
         foreach ($this->atividades as $ativ) {
             $data_i = explode("/",$ativ->getDataInicio());
             if( $data_i[2] > '2019')
                 echo $ativ->getDescricao()." - ".$ativ->getDataInicio()." - ".$ativ->getDataFim()."\n\n\n";
         }
-
+*/
         return $this->prof;
 
     }
@@ -66,5 +66,4 @@ public function __construct()
      });
     }
 }
-
 ?>
