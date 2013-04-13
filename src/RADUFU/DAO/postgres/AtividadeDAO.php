@@ -32,7 +32,7 @@ class AtividadeDAO implements IAtividadeDAO{
     const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
-    const SQL_ENTRE_DATAS = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor AND atividade_datainicio >= :atividade_datainicio AND atividade_datafim <= :atividade_datafim;';
+    const SQL_ENTRE_DATAS = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor AND atividade_datainicio >= :atividade_datainicio AND atividade_datafim <= :atividade_datafim ORDER BY (atividade_datainicio)';
 
     private $comprovanteDAO;
     private $tipoDAO;
