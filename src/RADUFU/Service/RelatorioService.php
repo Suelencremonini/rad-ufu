@@ -388,7 +388,7 @@ class RelatorioService extends FPDI{
     						echo $comprovante->getArquivo().'                ';
     						$pagecount = $this->relatorio->setSourceFile($comprovante->getArquivo());
     						echo $pagecount. '------------';
-    						if (!empty($pagecount))
+    						if (empty($pagecount))
     						{
 				            for($i = 1; $i <= $pagecount; $i++) 
 					            {
