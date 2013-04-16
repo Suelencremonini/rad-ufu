@@ -86,7 +86,7 @@ class RelatorioService extends FPDI{
 			$this->RelatorioAtividade($periodo);
 		}
 		$this->Comprovantes();
-		$this->relatorio->Output($this->prof->getNome(),'F');
+		$this->relatorio->Output($this->prof->getNome().'.pdf','F');
     }
 
     public function PrimeiraPagina()
@@ -322,9 +322,9 @@ class RelatorioService extends FPDI{
     				{
     					foreach ($atividade->getComprovantes() as $comprovante)
     					{
-    						echo $comprovante->getArquivo().'                ';
+    						//echo $comprovante->getArquivo().'                ';
     						$pagecount = $this->relatorio->setSourceFile($comprovante->getArquivo());
-    						echo $pagecount. '------------';
+    						//echo $pagecount. '------------';
     						if (!empty($pagecount))
     						{
 				            for($i = 1; $i <= $pagecount; $i++) 

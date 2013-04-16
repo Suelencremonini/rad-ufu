@@ -36,7 +36,11 @@ class RelatorioResource extends Resource {
         5. Certificados()
         Saida: Nada, ira apenas gerar o relatorio
         */
-        $this->relatorioService = new RelatorioService($id,$dataI,$dataF,$pont_ref,$lim_ensi);
+        $data_i = explode("/",$dataI);
+        $data_f = explode("/",$dataF);
+        $data_inicio = $data_i[2].'-'.$data_i[1].'-'.$data_i[0];
+        $data_final = $data_f[2].'-'.$data_f[1].'-'.$data_f[0];
+        $this->relatorioService = new RelatorioService($id,$data_inicio,$data_final,$pont_ref,$lim_ensi);
         $this->relatorioService->GerarRelatorio();
     }
 
