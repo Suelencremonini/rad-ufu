@@ -14,9 +14,9 @@ use RADUFU\Resource\RelatorioResource,
 	RADUFU\Service\RelatorioService;
 
 #$x = new RelatorioResource();
-$z = new RelatorioService(1);
+$z = new RelatorioResource();
 #$y = $x->GerarRelatorio(1);
-$z->GerarRelatorio();
+$z->GerarRelatorio(1,'2010-2-20','2013-2-20',320,0.1);
 #echo "Ola mundo".$y->getNome();
 
 

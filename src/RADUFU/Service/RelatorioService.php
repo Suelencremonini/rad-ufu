@@ -30,44 +30,11 @@ class RelatorioService extends FPDI{
     private $dataI;
     private $dataF;
     private $pontuacaoDeReferencia;
-    private $limitacaoDeEnsino;
+    private $limitacaoDeEnsino; #apenas a % de limitacao do ensino (% do valor de base)
+    private $limiteEnsino; #o valor de $limitacaoDeEnsino * pontuacao de referencia
     private $pontuacoes;
 	private $atividades; #atividades do professor entre as datas
 	private $ativPeriodos; #Array de array. um array de periodos onde para cada periodo temos um arrray com as atividades presentes nele
-    #private $inicio; #Data de inicio
-    #private $fim; #Data de fim
-    #private $periodos; #Array com (id,periodo), para saber todos os periodos das atividades
-    #private $tipos; #Array com (id,descricao) de todos os tipos de atividades presentes
-    #private $categoria; #Array com todas as categorias presentes
-
-	#private $dao;
-	#private $obj;
-
-	public function GetEntreDatas ($id,$start, $end){
-		# Argumentos: Data inicial e final
-		# Saida: Um array de atividades, sendo estas todas aquelas ministradas pelo professor entre as datas
-		
-	}
-
-	public function GetPeriodos ($atividades){
-		#Argumentos: Array de atividades
-		#Processamento: Varrer o Array e ver quais sao os periodos envolvidos
-		#Saida: Array com os periodos encontrados (id, periodo)
-	}
-
-	public function GetTiposCategorias ($atividades){
-		#Argumentos: Array de atividades
-		#Processamento: Varrer o Array e ver quais sao os tipos e categorias das atividades envolvidas
-		#Saida: Array com os todos os tipos encontrados (id, descricao, categoria)
-	}
-
-	public function GetProf($id)
-	{
-		#Argumentos: Id do professor
-		#Saida: Objeto professor
-		$professorService = new ProfessorService();
-		return $professorService->get($id);
-	}
 
     /**
      * @method GET
@@ -76,7 +43,7 @@ class RelatorioService extends FPDI{
      * @param int $idProfessor
      * @return Tonic\Response
      */
-    public function __construct($id)
+    public function __construct($id,$dataI,$dataF,$pont_ref,$lim_ensi)
         {
            $this->pdf = new FPDI("P","cm","A4");
            $this->atividades = array();
@@ -84,10 +51,11 @@ class RelatorioService extends FPDI{
            $this->atividadeService = new AtividadeService();
            $this->categoriaService = new CategoriaService();
            $this->prof = $this->GetProf($id);
-           $this->pontuacaoDeReferencia = 132;
-           $this->limitacaoDeEnsino = 100;
-           $this->dataI = '2010-10-2';
-           $this->dataF = '2016-10-2';
+           $this->pontuacaoDeReferencia = $pont_ref;
+           $this->limitacaoDeEnsino = $lim_ensi;
+           $this->limiteEnsino = $this->pontuacaoDeReferencia * $this->limitacaoDeEnsino;
+           $this->dataI = $dataI;
+           $this->dataF = $dataF;
         }
 
     public function GerarRelatorio(){
@@ -115,11 +83,10 @@ class RelatorioService extends FPDI{
 
 		foreach ($this->ativPeriodos as $periodo => $ativs) {
 			$this->QuadroPontuacao($periodo);
-			#$this->RelatorioAtividade($periodo);
+			$this->RelatorioAtividade($periodo);
 		}
 		$this->Comprovantes();
 		$this->relatorio->Output($this->prof->getNome(),'F');
-
     }
 
     public function PrimeiraPagina()
@@ -129,7 +96,7 @@ class RelatorioService extends FPDI{
         Processo:
             1. Construir o Cabecalho da pagina - OK
             2. Para cada periodo em atividades
-            3.     BE[periodo] = CalcularBrutoEnsino($atividades)
+            3.     BE[periodo] = CalcularBruto($atividades)
             4.     LE[periodo] = CalcularLimitadoEnsino($atividades)
             5.     O[periodo] = CalcularOutrasAtividades($atividades)
             6.     BT = BE[periodo] + O[periodo]
@@ -172,12 +139,12 @@ class RelatorioService extends FPDI{
 		        foreach ($this->ativPeriodos as $periodo => $categoriasDicionario)
 		        {
 		        	
-		        	$BE = $this->CalcularBrutoEnsino($categoriasDicionario['Ensino']);
-		        	$LE = $this->CalcularLimitadoEnsino($categoriasDicionario['Ensino']);
+		        	$BE = $this->CalcularBruto($categoriasDicionario['Ensino']);
+		        	$LE = $this->CalcularLimitadoEnsino($categoriasDicionario['Ensino'],$BE);
 		        	$O = $this->CalcularOutrasAtividades($categoriasDicionario);
 			        $BT = $BE+$O;
 		        	$LT = $LE+$O;
-		        	$MTP = ($BT+$LT)/2; //Media total por periodo
+		        	$MTP = $LT; //Media total por periodo
 		        	$TotalLT += $MTP;		
 				    $this->pontuacoes[$periodo]['BE'] = $BE;
 				    $this->pontuacoes[$periodo]['LE'] = $LE;
@@ -224,7 +191,7 @@ class RelatorioService extends FPDI{
         $this->relatorio->Cell(4,0.5,$this->pontuacaoDeReferencia,1,0,'C');
         $this->relatorio->Ln();
         $this->relatorio->Cell(4,0.5,utf8_decode('Limitação de ensino'),1,0,'C',1);
-        $this->relatorio->Cell(4,0.5,$this->limitacaoDeEnsino,1,0,'C');
+        $this->relatorio->Cell(4,0.5,($this->limitacaoDeEnsino * 100).'%',1,0,'C');
         $this->relatorio->Ln();    
     }
 
@@ -277,12 +244,11 @@ class RelatorioService extends FPDI{
         $this->relatorio->Cell(5.5,0.5,'Total',1,0,'C',1);
         $this->relatorio->Ln();
         $this->relatorio->SetFont('Times','',12);
-        $this->relatorio->Cell(5.5,0.5,$this->pontuacoes[$periodo]['LT'],1,0,'C');
-        $this->relatorio->Cell(5.5,0.5,$this->pontuacoes[$periodo]['LE'],1,0,'C');
+        $this->relatorio->Cell(5.5,0.5,$this->pontuacoes[$periodo]['BE'],1,0,'C');
         $this->relatorio->Cell(5.5,0.5,$this->pontuacoes[$periodo]['O'],1,0,'C');
+        $this->relatorio->Cell(5.5,0.5,$this->pontuacoes[$periodo]['BT'],1,0,'C');
         $this->relatorio->Ln();            
     }
-
     public function RelatorioAtividade($periodo){
         /*
         Entrada: Periodo, atividades, categoria
@@ -314,20 +280,7 @@ class RelatorioService extends FPDI{
     #-- Tipos de atividades
         //5: Atividade de Ensino, Atividade de Orientação, Produção bibliográfica, Produção Técnica, Outras Atividades.
         $this->relatorio->Ln();
-        //Caso haja mais de 5 tipos de atividade basta colocar um for aqui!
-        $atividades = array();
-        $atividades[0]=utf8_decode('Atividades de Ensino');
-        $atividades[1]=utf8_decode('Atividades de Orientação');
-        $atividades[2]=utf8_decode('Produção bibliográfica');
-        $atividades[3]=utf8_decode('Produção Técnica');
-        $atividades[4]=utf8_decode('Outras atividades');
 
-        $pontos = array();
-        $pontos[0] = 1234;
-        $pontos[1] = 134;
-        $pontos[2] = 234;
-        $pontos[3] = 125;
-        $pontos[4] = 834;
 
         $bullets = array();
         $bullets[0] = chr(127);
@@ -337,39 +290,23 @@ class RelatorioService extends FPDI{
         $bullets[4] = chr(185);
         $bullets[5] = chr(183);
         $bullets[6] = chr(176);
-
-        for($i = 0; $i<5;$i++)
-        {
-        $nivel = 0;        
-        //Nivel 0:
-        $this->relatorio->SetFont('Times','',14);
-        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.$atividades[$i].': '.$pontos[$i].' pontos');
-        $this->relatorio->Ln(1);
-
-        $this->relatorio->SetFont('Times','',12);
-        $nivel = 1;
-        //Nivel 1:
-            for ($j=0; $j < 3; $j++) { 
-                $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
-                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].utf8_decode(' Disciplinas no Curso de Bacharelado de Ciência da Computação ').$nivel);
+        //Caso haja mais de 5 tipos de atividade basta colocar um for aqui!
+        foreach ($this->ativPeriodos[$periodo] as $categoriasDicionario => $ativs)
+            {
+                $nivel = 0;
+                $this->relatorio->SetFont('Times','',14);
+                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].'Atividades de '.utf8_decode($categoriasDicionario).': '.$this->CalcularBruto($ativs).' pontos');
                 $this->relatorio->Ln(1);
 
-                $nivel ++ ;
-
-                for ($k=0; $k <3 ; $k++) { 
-                      #  $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
-                      #  $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].utf8_decode(' Isto é um texto de nível ').$nivel);
-                      #  $this->relatorio->Ln(1);
-                }
-
-                $nivel --;
-
-            }
-        $nivel --;
-        #$this->relatorio->SetFont('Times','',12);
-        #$this->relatorio->Cell(0,0.4,$pontos[$i].' pontos',0,0,'L',0);                
-
-        }        
+                $this->relatorio->SetFont('Times','',12);
+                foreach ($ativs as $atvdd)
+                    {
+                        $nivel = 1;
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].utf8_decode(' Disciplinas no Curso de Bacharelado de Ciência da Computação ').$nivel);
+                        $this->relatorio->Ln(1);
+                    }   
+            }      
     }
 
     # Anexa ao fim do documento os certificados das atividades
@@ -388,7 +325,7 @@ class RelatorioService extends FPDI{
     						echo $comprovante->getArquivo().'                ';
     						$pagecount = $this->relatorio->setSourceFile($comprovante->getArquivo());
     						echo $pagecount. '------------';
-    						if (empty($pagecount))
+    						if (!empty($pagecount))
     						{
 				            for($i = 1; $i <= $pagecount; $i++) 
 					            {
@@ -416,11 +353,6 @@ class RelatorioService extends FPDI{
     		}
     	}
 		$this->relatorio->header_flag = true;
-    }
-
-    # Coloca o valor correto na variavel PontuacaoDeReferencia de acordo com a classe e o nivel
-    public function CalculaPontuacao($classe, $nivel){
-
     }
 
 #---------------------- FUNCOES AUXILIARES ----------------------#
@@ -500,18 +432,18 @@ class RelatorioService extends FPDI{
 	    			}
 	    	}
 	    }
-    private function CalcularBrutoEnsino(array $atividadesEnsino)
+    private function CalcularBruto(array $atividades)
 	    {
 	    	$bruto = 0;
-	    	foreach ($atividadesEnsino as $ativ)
+	    	foreach ($atividades as $ativ)
 		    	{
 		    			$bruto += $this->pontosAtividade($ativ);
 		    	}
 		    return $bruto;
 	    }
-    private function CalcularLimitadoEnsino(array $atividadesEnsino)
+    private function CalcularLimitadoEnsino(array $atividadesEnsino, $bruto)
     	{
-    		return $this->limitacaoDeEnsino;
+    		return ($bruto > $this->limiteEnsino) ? $this->limiteEnsino : $bruto;
     	}
     private function CalcularOutrasAtividades(array $categoriasDicionario)
     	{
@@ -536,6 +468,13 @@ class RelatorioService extends FPDI{
     		$pontos = $atividade->getMultValor() * $pontuacao;
     		
 	    	return (!is_null($pontuacaoLimite) && $pontos > $pontuacaoLimite) ? $pontuacaoLimite : $pontos;
-    	}     	
+    	}     	    
+    public function GetProf($id)
+        {
+            #Argumentos: Id do professor
+            #Saida: Objeto professor
+            $professorService = new ProfessorService();
+            return $professorService->get($id);
+        }
 }
 ?>

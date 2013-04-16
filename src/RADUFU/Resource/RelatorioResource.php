@@ -14,17 +14,17 @@ class RelatorioResource extends Resource {
 /**
     Esta classe esta destinada a gerar o relatorio final, de acordo com as datas informadas utilizando o framework FPDF e FPDI.
 */
-public function __construct()
+    private $relatorioService;
+    public function __construct()
         {
             #$this->prof = new Professor();
             #$this->atividades = array();
             #$this->relatorioService = new RelatorioService();
-            $this->relatorioService = new RelatorioService();
-            $this->atividadeService = new atividadeService();
-            $this->prof = new Professor();
+            #$this->atividadeService = new atividadeService();
+            #$this->prof = new Professor();
         }
 
-    public function GerarRelatorio($id){
+    public function GerarRelatorio($id,$dataI,$dataF,$pont_ref,$lim_ensi){
         /*
         Entrada: A definir (professor, inicio, fim, classe, nivel)
         Processo:
@@ -36,22 +36,10 @@ public function __construct()
         5. Certificados()
         Saida: Nada, ira apenas gerar o relatorio
         */
-
-        #Preenchendo as variaveis da classe
-        $this->prof = $this->relatorioService->GetProf($id);
-        $this->atividades = $this->atividadeService->getEntreDatas($this->prof->getId(),'2010-10-2','2016-10-2');
-        
-
-/*
-        foreach ($this->atividades as $ativ) {
-            $data_i = explode("/",$ativ->getDataInicio());
-            if( $data_i[2] > '2019')
-                echo $ativ->getDescricao()." - ".$ativ->getDataInicio()." - ".$ativ->getDataFim()."\n\n\n";
-        }
-*/
-        return $this->prof;
-
+        $this->relatorioService = new RelatorioService($id,$dataI,$dataF,$pont_ref,$lim_ensi);
+        $this->relatorioService->GerarRelatorio();
     }
+
     protected function json() {
 
         $this->before(function ($request) {
