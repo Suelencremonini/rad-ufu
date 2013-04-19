@@ -24,7 +24,7 @@ class RelatorioResource extends Resource {
             #$this->prof = new Professor();
         }
 
-    public function GerarRelatorio($id,$dataI,$dataF,$classe,$nivel){
+    public function GerarRelatorio($id){
         /**
            $id, $dataI, $dataF,$classe,$nivel 
         */
