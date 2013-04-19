@@ -191,7 +191,7 @@ class RelatorioService extends FPDI{
         $this->relatorio->Cell(4,0.5,$this->pontuacaoDeReferencia,1,0,'C');
         $this->relatorio->Ln();
         $this->relatorio->Cell(4,0.5,utf8_decode('Limitação de ensino'),1,0,'C',1);
-        $this->relatorio->Cell(4,0.5,($this->limitacaoDeEnsino * 100).'%',1,0,'C');
+        $this->relatorio->Cell(4,0.5,($this->limitacaoDeEnsino *$this->pontuacaoDeReferencia),1,0,'C');
         $this->relatorio->Ln();    
     }
 

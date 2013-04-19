@@ -1,0 +1,190 @@
+#masthead 
+{
+	position: relative;
+	/*margin-top:10px;*/
+	height: 0px;
+	margin-bottom: 2.5em;
+	
+	-moz-box-shadow: 1px 1px 6px rgba(0,0,0,.5);	
+	-webkit-box-shadow: 1px 1px 6px rgba(0,0,0,.5);
+	box-shadow: 1spx 1px 6px rgba(0,0,0,.5);
+	background-color:#000;
+}
+
+#teste
+{
+	margin-top:15px;
+}
+.masthead-details {
+	position: absolute;
+	top: 0;
+	right: 0;
+	
+	width: 225px;
+	height: 700px;
+	padding: 20px;
+	
+	color: #FFF;
+	
+	background: #333;	
+	background: rgba(0,0,0,.70);
+	
+	text-shadow: 1px 1px 1px rgba(0,0,0,.4);
+}
+
+.masthead-details h2 {
+	margin-bottom: .75em;
+	
+	font-size: 28px;
+}
+
+.masthead-details p {	
+	font-size: 14px;	
+}
+
+#masthead .carousel-control {
+	top: 50%;
+	left: -72px;
+	
+	line-height: 31px; /*era 26 antes! -> cuida da centralidade da setinha!*/
+	
+	opacity: .35;
+	
+	-webkit-border-radius: 10; /* antes era tudo zero o que deixava isso quadrado*/
+	-moz-border-radius: 10;
+	border-radius: 10;
+}
+
+#masthead .carousel-control:hover {
+	opacity: .80;
+}
+
+#masthead .carousel-control.right {
+	left: auto;
+	right: -72px;
+}
+.img_carousel
+	{
+		width: 1024px;
+		height: 500px;
+	}
+
+body
+	{
+		background-image:url('../img/bg6.png');
+		background-repeat:repeat;
+		background-attachment:fixed;
+		
+	}
+#conteudo
+	{
+		
+		/*width: 880px;*/
+		padding: 15px 15px;		
+		margin: 10px auto;
+		
+		background: #FFF;
+		
+		border: 1px solid #DDD\9;
+		border-top: 12px solid #222;
+		border-bottom: 12px solid #222; /*Antes estava none;*/
+		
+		
+		-moz-box-shadow: 1px 1px 6px rgba(0,0,0,.5);	
+		-webkit-box-shadow: 1px 1px 6px rgba(0,0,0,.5);
+		box-shadow: 1spx 1px 6px rgba(0,0,0,.5);
+		/*
+		-moz-box-shadow: 0 0 5px rgba(0,0,0,.25);
+		-webkit-box-shadow: 0 0 5px rgba(0,0,0,.25);
+		box-shadow: 0 0 5px rgba(0,0,0,.25);
+		
+		*/
+	}
+
+#apresentacao h1 {
+	padding: 0 80px;
+	
+	color: #777;
+	
+	font-size: 22px;
+	font-style: italic;
+	font-weight: 600;
+	line-height: 1.75em;
+}
+
+.row [class^="grid-"]:first-child {
+	margin-left: 0;
+}
+
+.row.nopad [class^="grid-"] {
+	margin-bottom: 0;
+}
+
+.row.divider:last-child {
+	margin-bottom: 0;
+	
+	border: none;
+}
+
+#triangulo-footer
+	{
+		margin-top: 20px;
+		width: 100%;
+		height: 40px;
+		background: url(../img/triangulo.png) top repeat-x;
+	}
+
+footer 
+	{
+		
+		background: url(../img/footer-bg2.png) top repeat-x;
+		width: 100%;
+		min-height: 200px;
+		/*color: white;*/
+		margin-top: 20px;
+		font-weight: lighter;
+	}
+	
+footer b{color: #888;}
+
+#footer_2
+	{
+	background: #0D0D0D;
+	padding: 15px 0;
+	color: #626262;
+	font-size: 11px;
+	text-align: center;
+	}
+
+.row-divider {
+	margin: 1em 0 3em;
+	border: none;
+	border-bottom: 1px dotted #CCC;
+}
+
+.row-divider2{
+	margin: 0.25em 0 0.5em;
+	border: none;
+}
+
+.grid-3 
+	{
+		width: 205px;
+		float: left;	
+		margin: 0 0 0 20px;
+	}
+
+.grid-32 
+	{
+		padding-left: 6px;
+		width: 300px;
+		float: left;	
+		margin: 0 0 0 20px;
+	}
+.row { zoom: 1; }
+.clearfix:before,
+.row:before,
+.clearfix:after,
+.row:after { content: ""; display: table; }
+.clearfix:after,
+.row:after { clear: both; }

@@ -24,25 +24,63 @@ class RelatorioResource extends Resource {
             #$this->prof = new Professor();
         }
 
-    public function GerarRelatorio($id,$dataI,$dataF,$pont_ref,$lim_ensi){
-        /*
-        Entrada: A definir (professor, inicio, fim, classe, nivel)
-        Processo:
-        0. "Preencher" as variaveis da classe 
-        1. PrimeiraPagina()
-        2. para cada periodo:
-        3.      QuadroPontuacao()
-        4.      RelatorioAtividade()
-        5. Certificados()
-        Saida: Nada, ira apenas gerar o relatorio
+    public function GerarRelatorio($id,$dataI,$dataF,$classe,$nivel){
+        /**
+           $id, $dataI, $dataF,$classe,$nivel 
         */
-        $data_i = explode("/",$dataI);
-        $data_f = explode("/",$dataF);
-        $data_inicio = $data_i[2].'-'.$data_i[1].'-'.$data_i[0];
-        $data_final = $data_f[2].'-'.$data_f[1].'-'.$data_f[0];
-        $this->relatorioService = new RelatorioService($id,$data_inicio,$data_final,$pont_ref,$lim_ensi);
-        $this->relatorioService->GerarRelatorio();
+        #Criando o dicionario com as opcoes possiveis(classe,nivel[0,1,2])
+            $pont_ref["auxiliar"][0] = 120;
+            $pont_ref["auxiliar"][1] = 125;
+            $pont_ref["auxiliar"][2] = 130;
+            
+            $pont_ref["assistente"][0] = 138;
+            $pont_ref["assistente"][1] = 146;
+            $pont_ref["assistente"][2] = 154;
+
+            $pont_ref["adjunto"][0] = 166;
+            $pont_ref["adjunto"][1] = 178;
+            $pont_ref["adjunto"][2] = 190;
+
+            $pont_ref["associado"][0] = 214;
+            $pont_ref["associado"][1] = 226;
+            $pont_ref["associado"][2] = 238;
+        #limitacao de ensino sera igual para todos
+            $lim_ensi = 0.85;
+        if(is_null($id))
+            throw new Tonic\MethodNotAllowedException();
+
+        if(!(isset($this->request->data->id)
+            &&isset($this->request->data->dataI)
+            &&isset($this->request->data->dataF)
+            &&isset($this->request->data->classe)
+            &&isset($this->request->data->nivel)))
+            return new Response(Response::BADREQUEST);
+        
+        try {
+            $data_inicio = $this->data($dataI);
+            $data_final = $this->data($dataF);
+            $this->relatorioService = new RelatorioService(
+                $this->request->data->id,
+                $this->request->data->dataI,
+                $this->request->data->dataF,
+                $this->request->data->classe,
+                $this->request->data->nivel
+                );
+            $this->relatorioService->GerarRelatorio();
+            return new Response(Response::OK);
+
+        } catch (RADUFU\DAO\NotFoundException $e) {
+            throw new Tonic\NotFoundException();
+        } catch (RADUFU\DAO\Exception $e) {
+            throw new Tonic\Exception($e->getMessage());
+        }
     }
+    #funcao para formatar a data
+    private function data($data)
+        {
+            $aux = explode("/",$data);
+            return $aux[2].'-'.$aux[1].'-'.$aux[0];
+        }
 
     protected function json() {
 

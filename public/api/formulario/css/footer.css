@@ -1,0 +1,74 @@
+.row [class^="grid-"]:first-child {
+	margin-left: 0;
+}
+
+.row.nopad [class^="grid-"] {
+	margin-bottom: 0;
+}
+
+.row.divider:last-child {
+	margin-bottom: 0;
+	
+	border: none;
+}
+
+#triangulo-footer
+	{
+		margin-top: 20px;
+		width: 100%;
+		height: 40px;
+		background: url(../img/triangulo.png) top repeat-x;
+	}
+
+footer 
+	{
+		
+		background: url(../img/footer-bg2.png) top repeat-x;
+		width: 100%;
+		min-height: 200px;
+		/*color: white;*/
+		margin-top: 20px;
+		font-weight: lighter;
+	}
+	
+footer b{color: #888;}
+
+#footer_2
+	{
+	background: #0D0D0D;
+	padding: 15px 0;
+	color: #626262;
+	font-size: 11px;
+	text-align: center;
+	}
+/*
+#footer_esq
+	{
+	padding-left:125px;
+	}
+*/
+.row-divider {
+	margin: 1.5em 0 3em;
+	border: none;
+	border-bottom: 1px dotted #CCC;
+}
+
+.row-divider2{
+	margin: 0.25em 0 0.5em;
+	border: none;
+}
+
+.grid-3 
+	{
+		width: 205px;
+		float: left;	
+		margin: 0 0 0 20px;
+	}
+
+.grid-32 
+	{
+		padding-left: 6px;
+		width: 300px;
+		float: left;	
+		margin: 0 0 0 20px;
+	}

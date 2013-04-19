@@ -16,7 +16,7 @@ use RADUFU\Resource\RelatorioResource,
 #$x = new RelatorioResource();
 $z = new RelatorioResource();
 #$y = $x->GerarRelatorio(1);
-$z->GerarRelatorio(1,'2010-2-20','2013-2-20',320,0.1);
+$z->GerarRelatorio(1,'20/2/2010','20/2/2014',"auxiliar",2);
 #echo "Ola mundo".$y->getNome();
 
 
